@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="医疗采集系统" />
+    <title>医疗采集系统</title>
+    <!-- 引入Roboto字体 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <style>
+      /* 基本样式 */
+      body {
+        margin: 0;
+        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #f5f5f5;
+      }
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      /* 演示样式 */
+      .main-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: #f0f7ff;
+      }
+      
+      .header {
+        background-color: #0066cc;
+        color: white;
+        padding: 12px 20px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      
+      .header-left {
+        display: flex;
+        align-items: center;
+      }
+      
+      .logo {
+        height: 40px;
+        margin-right: 16px;
+        vertical-align: middle;
+      }
+      
+      .header-title {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+      
+      .progress-bar {
+        height: 6px;
+        background-color: #d0e4ff;
+      }
+      
+      .progress-bar-filled {
+        height: 100%;
+        background-color: #ff4081;
+        width: 12.5%; /* 第一步, 1/8 */
+        transition: width 0.5s ease;
+      }
+      
+      .content {
+        flex: 1;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .step-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 700px;
+        width: 100%;
+      }
+      
+      .step-title {
+        color: #0066cc;
+        font-weight: bold;
+        font-size: 1.7rem;
+        margin-bottom: 20px;
+      }
+      
+      .step-description {
+        font-size: 1.1rem;
+        margin-bottom: 24px;
+        color: #333;
+        line-height: 1.5;
+      }
+      
+      .card-image {
+        width: 500px;
+        height: 300px;
+        margin: 24px auto;
+        border-radius: 12px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        display: block;
+        object-fit: cover;
+        object-position: center;
+      }
+      
+      .video-container {
+        width: 100%;
+        max-width: 450px;
+        margin: 24px auto;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+      
+      .video-element {
+        width: 100%;
+        display: block;
+      }
+      
+      .button {
+        background-color: #0066cc;
+        color: white;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 28px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+        box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+      }
+      
+      .button:hover {
+        background-color: #0052a3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 102, 204, 0.4);
+      }
+      
+      .button:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);
+      }
+      
+      .confirmation-dialog {
+        background-color: #e6f3ff;
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .confirmation-text {
+        font-size: 2rem;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 40px;
+      }
+      
+      .buttons-container {
+        display: flex;
+        gap: 16px;
+      }
+      
+      .btn-cancel {
+        background-color: white;
+        color: #666;
+        border: 1px solid #ddd;
+        min-width: 120px;
+      }
+      
+      .btn-confirm {
+        background-color: #0066cc;
+        min-width: 120px;
+      }
+      
+      .progress-indicator {
+        width: 80%;
+        margin: 20px auto;
+        background-color: #e6e6e6;
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      
+      .progress-fill {
+        height: 100%;
+        background-color: #4caf50;
+        transition: width 0.2s linear;
+      }
+      
+      .progress-value {
+        margin-top: 10px;
+        font-size: 1rem;
+        color: #666;
+      }
+      
+      .status-text {
+        color: #4caf50;
+        font-weight: 500;
+        margin-top: 16px;
+        font-size: 1.1rem;
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0% { opacity: 0.7; }
+        50% { opacity: 1; }
+        100% { opacity: 0.7; }
+      }
+      
+      .result-card {
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 400px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      }
+      
+      .result-header {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px;
+        border-radius: 8px 8px 0 0;
+        margin: -20px -20px 20px -20px;
+        font-weight: bold;
+      }
+      
+      .result-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #eee;
+      }
+      
+      .result-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      
+      .result-label {
+        color: #666;
+      }
+      
+      .result-value {
+        font-weight: 500;
+      }
+      
+      .success-value {
+        color: #4caf50;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>您需要启用JavaScript来运行此应用。</noscript>
+    <div id="root">
+      <!-- 演示页面（非React实现，仅为展示目的） -->
+      <div class="main-container">
+        <header class="header">
+          <div class="header-left">
+            <img src="./assets/icon.jpg" alt="医疗采集系统图标" class="logo" />
+            <h1 class="header-title">医疗采集系统</h1>
+          </div>
+          <div>步骤 1 / 8</div>
+        </header>
+        <div class="progress-bar">
+          <div class="progress-bar-filled"></div>
+        </div>
+        <main class="content">
+          <div class="step-container">
+            <h2 class="step-title">请插入您的医保卡</h2>
+            <p class="step-description">请将医保卡插入设备右侧的卡槽中，以完成身份验证流程</p>
+            <img src="./assets/实际图片1.jpg" alt="医保卡插入示意图" class="card-image" />
+            <button class="button">检测医保卡</button>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script>
+      // 这里本应该是React代码，但为了简单演示，我们使用原生JS实现一些交互
+      document.addEventListener('DOMContentLoaded', function() {
+        // 获取DOM元素
+        const progressBar = document.querySelector('.progress-bar-filled');
+        const stepTitle = document.querySelector('.step-title');
+        const stepDescription = document.querySelector('.step-description');
+        const stepContainer = document.querySelector('.step-container');
+        const button = document.querySelector('.button');
+        const stepCounter = document.querySelector('.header div');
+        
+        // 设置步骤的内容
+        const steps = [
+          {
+            title: '请插入您的医保卡',
+            description: '请将医保卡插入设备右侧的卡槽中，以完成身份验证流程',
+            content: '<img src="./assets/实际图片1.jpg" alt="医保卡插入示意图" class="card-image" />',
+            buttonText: '检测医保卡',
+            showButton: true
+          },
+          {
+            title: '请确认您是否空腹',
+            description: '为确保检测结果准确，我们需要确认您是否处于空腹状态（8小时内未进食）',
+            content: `<div style="background-color: #f0f7ff; width: 100%; text-align: center; padding: 30px 20px; border-radius: 8px;">
+                        <div style="font-size: 1.8rem; color: #0066cc; margin-bottom: 20px;">请在屏幕上确认您是否空腹</div>
+                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 40px;">
+                           <button style="background-color: white; color: #333; border: 1px solid #ddd; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer;" class="btn-cancel">取消</button>
+                           <button style="background-color: #0066cc; color: white; border: none; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);" class="btn-confirm">确认</button>
+                        </div>
+                      </div>`,
+            buttonText: '确认并继续',
+            showButton: false
+          },
+          {
+            title: '请确认您的身份信息',
+            description: '请仔细核对以下信息，确认是否为您本人',
+            content: `<div style="background-color: #f0f7ff; width: 100%; text-align: center; padding: 30px 20px; border-radius: 8px;">
+                        <div style="font-size: 1.8rem; color: #0066cc; margin-bottom: 20px;">请继续确认是否您本人</div>
+                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 40px;">
+                           <button style="background-color: white; color: #333; border: 1px solid #ddd; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer;" class="btn-cancel">取消</button>
+                           <button style="background-color: #0066cc; color: white; border: none; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);" class="btn-confirm">确认</button>
+                        </div>
+                      </div>`,
+            buttonText: '是我本人',
+            showButton: false
+          },
+          {
+            title: '请将手放入采集设备',
+            description: '请按照下图所示将手部轻轻放入设备采集窗口，保持自然放松状态',
+            content: '<img src="./assets/实际图片4-1.jpg" alt="手部放入示意图" class="card-image" />',
+            buttonText: '已放入手部',
+            showButton: true
+          },
+          {
+            title: '请保持不动',
+            description: '系统正在进行扫描，请保持手部静止，倒计时结束后将自动进入下一步',
+            content: `<div class="progress-indicator">
+                        <div class="progress-fill" style="width: 0%"></div>
+                      </div>
+                      <div class="progress-value">0%</div>
+                      <div class="status-text">扫描中，请保持不动...</div>`,
+            buttonText: '确认保持不动',
+            hasProgressSimulation: true,
+            showButton: false
+          },
+          {
+            title: '正在为您消毒',
+            description: '系统正在进行手部消毒处理，请保持手部静止，稍等片刻',
+            content: `<img src="./assets/图片5.jpg" alt="消毒过程" class="card-image" />
+                      <div class="progress-indicator">
+                        <div class="progress-fill" style="width: 0%"></div>
+                      </div>
+                      <div class="progress-value">0%</div>
+                      <div class="status-text">消毒中，请保持不动...</div>`,
+            buttonText: '等待消毒完成',
+            hasProgressSimulation: true,
+            showButton: false
+          },
+          {
+            title: '正在进行采血',
+            description: '系统正在进行采血过程，请保持手部静止，全程不要移动',
+            content: `<img src="./assets/图片6.jpg" alt="采血过程" class="card-image" />
+                      <div class="progress-indicator">
+                        <div class="progress-fill" style="width: 0%"></div>
+                      </div>
+                      <div class="progress-value">0%</div>
+                      <div class="status-text">采血中，请保持不动...</div>`,
+            buttonText: '等待采血完成',
+            hasProgressSimulation: true,
+            showButton: false
+          },
+          {
+            title: '采血完成',
+            description: '您的血液样本已成功采集，请按照下方提示取走报告单',
+            content: `<img src="./assets/实际图片5.jpg" alt="采血完成" class="card-image" />
+                      <div class="result-card">
+                        <div class="result-header">采集结果</div>
+                        <div class="result-row">
+                          <span class="result-label">样本编号:</span>
+                          <span class="result-value">BLD-${Math.floor(Math.random() * 10000).toString().padStart(5, '0')}</span>
+                        </div>
+                        <div class="result-row">
+                          <span class="result-label">采集时间:</span>
+                          <span class="result-value">${new Date().toLocaleDateString('zh-CN', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}</span>
+                        </div>
+                        <div class="result-row">
+                          <span class="result-label">采集状态:</span>
+                          <span class="result-value success-value">成功</span>
+                        </div>
+                      </div>`,
+            buttonText: '完成并退出'
+          }
+        ];
+        
+        let currentStep = 0;
+        let progressInterval = null;
+        
+        // 更新UI函数
+        function updateStep() {
+          // 清除任何正在运行的进度条模拟
+          if (progressInterval) {
+            clearInterval(progressInterval);
+            progressInterval = null;
+          }
+          
+          // 更新进度条
+          progressBar.style.width = `${(currentStep + 1) / steps.length * 100}%`;
+          
+          // 更新步骤内容
+          stepTitle.textContent = steps[currentStep].title;
+          stepDescription.textContent = steps[currentStep].description;
+          
+          // 更新主要内容区域
+          const mainContent = steps[currentStep].content;
+          const buttonText = steps[currentStep].buttonText;
+          const showButton = steps[currentStep].showButton !== false;
+          
+          // 创建新的内容，保留标题和描述
+          stepContainer.innerHTML = `
+            <h2 class="step-title">${steps[currentStep].title}</h2>
+            <p class="step-description">${steps[currentStep].description}</p>
+            ${mainContent}
+            ${showButton ? `<button class="button">${buttonText}</button>` : ''}
+          `;
+          
+          // 重新绑定按钮点击事件
+          const mainButton = document.querySelector('.button:not(.btn-cancel):not(.btn-confirm)');
+          if (mainButton) {
+            mainButton.addEventListener('click', handleButtonClick);
+          }
+          
+          // 如果是需要显示确认对话框的步骤，绑定确认按钮事件
+          if (currentStep === 1 || currentStep === 2) {
+            document.querySelector('.btn-confirm').addEventListener('click', function() {
+              goToNextStep();
+            });
+            
+            document.querySelector('.btn-cancel').addEventListener('click', function() {
+              alert('请联系工作人员协助');
+            });
+          }
+          
+          // 如果步骤有进度条模拟
+          if (steps[currentStep].hasProgressSimulation) {
+            const progressFill = document.querySelector('.progress-fill');
+            const progressValue = document.querySelector('.progress-value');
+            let progress = 0;
+            
+            progressInterval = setInterval(() => {
+              progress += 1;
+              if (progress <= 100) {
+                progressFill.style.width = `${progress}%`;
+                progressValue.textContent = `${progress}%`;
+                
+                if (progress === 100) {
+                  clearInterval(progressInterval);
+                  setTimeout(() => {
+                    goToNextStep();
+                  }, 1000);
+                }
+              }
+            }, 100);
+          }
+          
+          // 如果有视频元素，确保视频播放
+          const videoElements = document.querySelectorAll('video');
+          videoElements.forEach(video => {
+            // 确保视频已加载
+            if (video.readyState >= 2) { // HAVE_CURRENT_DATA或更高
+              playVideo(video);
+            } else {
+              // 如果视频还没准备好，等待加载
+              video.addEventListener('loadeddata', function() {
+                playVideo(video);
+              });
+              
+              // 为确保视频加载，重新设置src
+              const currentSrc = video.querySelector('source').src;
+              video.querySelector('source').src = currentSrc;
+              video.load();
+            }
+          });
+          
+          // 更新步骤计数
+          stepCounter.textContent = `步骤 ${currentStep + 1} / ${steps.length}`;
+        }
+        
+        // 播放视频的辅助函数
+        function playVideo(videoElement) {
+          const playPromise = videoElement.play();
+          
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              // 视频成功播放
+              console.log('视频播放成功');
+            }).catch(err => {
+              console.log('视频播放失败:', err);
+              // 尝试再次播放（用户可能需要交互）
+              document.addEventListener('click', function playOnClick() {
+                videoElement.play().catch(e => console.log('用户交互后仍无法播放视频'));
+                document.removeEventListener('click', playOnClick);
+              }, { once: true });
+            });
+          }
+        }
+        
+        // 前进到下一步
+        function goToNextStep() {
+          if (currentStep < steps.length - 1) {
+            currentStep++;
+            updateStep();
+          } else {
+            // 重新开始
+            currentStep = 0;
+            updateStep();
+          }
+        }
+        
+        // 按钮点击事件处理
+        function handleButtonClick() {
+          // 如果是有进度条的步骤，不要立即跳转
+          if (!steps[currentStep].hasProgressSimulation) {
+            goToNextStep();
+          }
+        }
+        
+        // 初始更新UI
+        updateStep();
+      });
+    </script>
+  </body>
+</html> 
