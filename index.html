@@ -197,12 +197,24 @@
         height: 8px;
         border-radius: 4px;
         overflow: hidden;
+        position: relative;
       }
       
       .progress-fill {
+        position: absolute;
+        width: 30%;
         height: 100%;
-        background-color: #4caf50;
-        transition: width 0.2s linear;
+        background: linear-gradient(to right, transparent, #4caf50, transparent);
+        animation: moveProgress 1.5s linear infinite;
+      }
+      
+      @keyframes moveProgress {
+        0% {
+          left: -30%;
+        }
+        100% {
+          left: 100%;
+        }
       }
       
       .progress-value {
@@ -369,39 +381,42 @@
             title: '请保持不动',
             description: '系统正在进行扫描，请保持手部静止，倒计时结束后将自动进入下一步',
             content: `<div class="progress-indicator">
-                        <div class="progress-fill" style="width: 0%"></div>
+                        <div class="progress-fill"></div>
                       </div>
-                      <div class="progress-value">0%</div>
                       <div class="status-text">扫描中，请保持不动...</div>`,
             buttonText: '确认保持不动',
             hasProgressSimulation: true,
-            showButton: false
+            showButton: false,
+            autoProgress: true,
+            autoProgressTime: 5000
           },
           {
             title: '正在为您消毒',
             description: '系统正在进行手部消毒处理，请保持手部静止，稍等片刻',
             content: `<img src="./assets/图片5.jpg" alt="消毒过程" class="card-image" />
                       <div class="progress-indicator">
-                        <div class="progress-fill" style="width: 0%"></div>
+                        <div class="progress-fill"></div>
                       </div>
-                      <div class="progress-value">0%</div>
                       <div class="status-text">消毒中，请保持不动...</div>`,
             buttonText: '等待消毒完成',
             hasProgressSimulation: true,
-            showButton: false
+            showButton: false,
+            autoProgress: true,
+            autoProgressTime: 5000
           },
           {
             title: '正在进行采血',
             description: '系统正在进行采血过程，请保持手部静止，全程不要移动',
             content: `<img src="./assets/图片6.jpg" alt="采血过程" class="card-image" />
                       <div class="progress-indicator">
-                        <div class="progress-fill" style="width: 0%"></div>
+                        <div class="progress-fill"></div>
                       </div>
-                      <div class="progress-value">0%</div>
                       <div class="status-text">采血中，请保持不动...</div>`,
             buttonText: '等待采血完成',
             hasProgressSimulation: true,
-            showButton: false
+            showButton: false,
+            autoProgress: true,
+            autoProgressTime: 5000
           },
           {
             title: '采血完成',
@@ -482,24 +497,12 @@
           
           // 如果步骤有进度条模拟
           if (steps[currentStep].hasProgressSimulation) {
-            const progressFill = document.querySelector('.progress-fill');
-            const progressValue = document.querySelector('.progress-value');
-            let progress = 0;
-            
-            progressInterval = setInterval(() => {
-              progress += 1;
-              if (progress <= 100) {
-                progressFill.style.width = `${progress}%`;
-                progressValue.textContent = `${progress}%`;
-                
-                if (progress === 100) {
-                  clearInterval(progressInterval);
-                  setTimeout(() => {
-                    goToNextStep();
-                  }, 1000);
-                }
-              }
-            }, 100);
+            // 设置自动进度
+            if (steps[currentStep].autoProgress) {
+              setTimeout(() => {
+                goToNextStep();
+              }, steps[currentStep].autoProgressTime);
+            }
           }
           
           // 如果有视频元素，确保视频播放
