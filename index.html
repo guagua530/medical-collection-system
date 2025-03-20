@@ -389,8 +389,8 @@
           {
             title: '请确认您是否空腹',
             description: '为确保检测结果准确，我们需要确认您是否处于空腹状态（8小时内未进食）',
-            content: `<div class="confirmation-container">
-                        <div class="button-group">
+            content: `<div class="result-card">
+                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
                            <button style="background-color: white; color: #333; border: 1px solid #ddd; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer;" class="btn-cancel">取消</button>
                            <button style="background-color: #0066cc; color: white; border: none; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);" class="btn-confirm">确认</button>
                         </div>
@@ -444,8 +444,9 @@
             buttonText: '确认保持不动',
             hasProgressSimulation: true,
             showButton: false,
-            autoProgress: true,
-            autoProgressTime: 5000
+            autoProgress: false,
+            autoProgressTime: 5000,
+            needHandConfirmation: true
           },
           {
             title: '正在为您消毒',
@@ -558,8 +559,22 @@
           
           // 如果步骤有进度条模拟
           if (steps[currentStep].hasProgressSimulation) {
-            // 设置自动进度
-            if (steps[currentStep].autoProgress) {
+            if (steps[currentStep].needHandConfirmation) {
+              // 延迟1.5秒后显示确认对话框
+              setTimeout(() => {
+                const currentContent = document.querySelector('.step-content');
+                currentContent.innerHTML = `
+                  <div class="result-card">
+                    <div style="font-size: 1.2rem; color: #333; margin-bottom: 20px;">
+                      请确认您的手是否已放入设备内？
+                    </div>
+                    <div style="display: flex; justify-content: center; gap: 30px;">
+                      <button style="background-color: white; color: #333; border: 1px solid #ddd; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer;" onclick="handleHandConfirmation(false)">否</button>
+                      <button style="background-color: #0066cc; color: white; border: none; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);" onclick="handleHandConfirmation(true)">是</button>
+                    </div>
+                  </div>`;
+              }, 1500);
+            } else if (steps[currentStep].autoProgress) {
               setTimeout(() => {
                 goToNextStep();
               }, steps[currentStep].autoProgressTime);
@@ -627,6 +642,29 @@
             goToNextStep();
           }
         }
+        
+        // 添加手部确认处理函数到全局作用域
+        window.handleHandConfirmation = function(confirmed) {
+          if (confirmed) {
+            // 如果确认已放入手，显示扫描进度并继续
+            const currentContent = document.querySelector('.step-content');
+            currentContent.innerHTML = `
+              <div class="progress-indicator">
+                <div class="progress-fill"></div>
+              </div>
+              <div class="status-text">扫描中，请保持不动...</div>`;
+            
+            // 5秒后进入下一步
+            setTimeout(() => {
+              goToNextStep();
+            }, 5000);
+          } else {
+            // 如果未放入手，提示并返回首页
+            alert('请将手放入设备后再开始检测。');
+            currentStep = 0;
+            updateStep();
+          }
+        };
         
         // 初始更新UI
         updateStep();
