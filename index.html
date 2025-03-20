@@ -348,8 +348,7 @@
             title: '请确认您是否空腹',
             description: '为确保检测结果准确，我们需要确认您是否处于空腹状态（8小时内未进食）',
             content: `<div style="background-color: #f0f7ff; width: 100%; text-align: center; padding: 30px 20px; border-radius: 8px;">
-                        <div style="font-size: 1.8rem; color: #0066cc; margin-bottom: 20px;">请在屏幕上确认您是否空腹</div>
-                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 40px;">
+                        <div style="display: flex; justify-content: center; gap: 30px;">
                            <button style="background-color: white; color: #333; border: 1px solid #ddd; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer;" class="btn-cancel">取消</button>
                            <button style="background-color: #0066cc; color: white; border: none; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);" class="btn-confirm">确认</button>
                         </div>
@@ -360,9 +359,25 @@
           {
             title: '请确认您的身份信息',
             description: '请仔细核对以下信息，确认是否为您本人',
-            content: `<div style="background-color: #f0f7ff; width: 100%; text-align: center; padding: 30px 20px; border-radius: 8px;">
-                        <div style="font-size: 1.8rem; color: #0066cc; margin-bottom: 20px;">请继续确认是否您本人</div>
-                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 40px;">
+            content: `<div class="result-card" style="max-width: 500px;">
+                        <div class="result-header">身份信息</div>
+                        <div class="result-row">
+                          <span class="result-label">姓名:</span>
+                          <span class="result-value">张三</span>
+                        </div>
+                        <div class="result-row">
+                          <span class="result-label">性别:</span>
+                          <span class="result-value">男</span>
+                        </div>
+                        <div class="result-row">
+                          <span class="result-label">年龄:</span>
+                          <span class="result-value">35岁</span>
+                        </div>
+                        <div class="result-row">
+                          <span class="result-label">医保卡号:</span>
+                          <span class="result-value">3301************1234</span>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
                            <button style="background-color: white; color: #333; border: 1px solid #ddd; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer;" class="btn-cancel">取消</button>
                            <button style="background-color: #0066cc; color: white; border: none; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);" class="btn-confirm">确认</button>
                         </div>
