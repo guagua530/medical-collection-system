@@ -6,6 +6,9 @@
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="医疗采集系统" />
     <title>医疗采集系统</title>
+    <!-- 预加载关键资源 -->
+    <link rel="preload" as="image" href="./assets/图片5.jpg">
+    <link rel="preload" as="image" href="./assets/图片6.jpg">
     <!-- 引入Roboto字体 -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     <style>
@@ -294,6 +297,22 @@
       </div>
     </div>
     <script>
+      // 预加载所有图片
+      function preloadImages() {
+        const imageUrls = [
+          './assets/图片5.jpg',
+          './assets/图片6.jpg'
+        ];
+        
+        imageUrls.forEach(url => {
+          const img = new Image();
+          img.src = url;
+        });
+      }
+
+      // 页面加载完成后开始预加载
+      window.addEventListener('load', preloadImages);
+
       // 这里本应该是React代码，但为了简单演示，我们使用原生JS实现一些交互
       document.addEventListener('DOMContentLoaded', function() {
         // 获取DOM元素
