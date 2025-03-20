@@ -43,26 +43,28 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        position: relative;
       }
       
       .header-left {
         display: flex;
         align-items: center;
+        gap: 12px;
       }
       
       .logo {
-        height: 40px;
-        margin-right: 16px;
-        vertical-align: middle;
+        height: 32px;
+        border-radius: 4px;
+        display: block;
       }
       
       .header-title {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         font-weight: 500;
       }
       
       .progress-bar {
-        height: 6px;
+        height: 4px;
         background-color: #d0e4ff;
       }
       
@@ -75,7 +77,7 @@
       
       .content {
         flex: 1;
-        padding: 40px 20px;
+        padding: 20px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -87,15 +89,30 @@
         border-radius: 16px;
         text-align: center;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        max-width: 700px;
+        width: 600px;
+        min-height: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }
+      
+      .step-content {
         width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0;
       }
       
       .step-title {
         color: #0066cc;
         font-weight: bold;
-        font-size: 1.7rem;
-        margin-bottom: 20px;
+        font-size: 1.6rem;
+        margin-bottom: 16px;
+        width: 100%;
       }
       
       .step-description {
@@ -103,12 +120,14 @@
         margin-bottom: 24px;
         color: #333;
         line-height: 1.5;
+        width: 100%;
+        max-width: 500px;
       }
       
       .card-image {
-        width: 500px;
-        height: 300px;
-        margin: 24px auto;
+        width: 480px;
+        height: 270px;
+        margin: 20px auto;
         border-radius: 12px;
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         display: block;
@@ -191,10 +210,10 @@
       }
       
       .progress-indicator {
-        width: 80%;
-        margin: 20px auto;
+        width: 480px;
+        margin: 24px auto;
         background-color: #e6e6e6;
-        height: 8px;
+        height: 6px;
         border-radius: 4px;
         overflow: hidden;
         position: relative;
@@ -226,8 +245,8 @@
       .status-text {
         color: #4caf50;
         font-weight: 500;
-        margin-top: 16px;
-        font-size: 1.1rem;
+        margin-top: 20px;
+        font-size: 1.2rem;
         animation: pulse 2s infinite;
       }
       
@@ -242,7 +261,7 @@
         border-radius: 12px;
         padding: 20px;
         margin: 20px auto;
-        max-width: 400px;
+        width: 480px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       }
       
@@ -259,27 +278,50 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 12px;
-        padding-bottom: 12px;
+        padding: 8px 0;
         border-bottom: 1px solid #eee;
       }
       
       .result-row:last-child {
         border-bottom: none;
         margin-bottom: 0;
-        padding-bottom: 0;
       }
       
       .result-label {
         color: #666;
+        flex: 0 0 100px;
+        text-align: left;
       }
       
       .result-value {
         font-weight: 500;
+        flex: 1;
+        text-align: right;
+        padding-left: 20px;
       }
       
       .success-value {
         color: #4caf50;
         font-weight: bold;
+      }
+      
+      .confirmation-container {
+        background-color: #f0f7ff;
+        width: 600px;
+        padding: 40px;
+        border-radius: 12px;
+        margin: 20px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        width: 100%;
       }
     </style>
   </head>
@@ -347,8 +389,8 @@
           {
             title: '请确认您是否空腹',
             description: '为确保检测结果准确，我们需要确认您是否处于空腹状态（8小时内未进食）',
-            content: `<div style="background-color: #f0f7ff; width: 100%; text-align: center; padding: 30px 20px; border-radius: 8px;">
-                        <div style="display: flex; justify-content: center; gap: 30px;">
+            content: `<div class="confirmation-container">
+                        <div class="button-group">
                            <button style="background-color: white; color: #333; border: 1px solid #ddd; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer;" class="btn-cancel">取消</button>
                            <button style="background-color: #0066cc; color: white; border: none; border-radius: 24px; padding: 12px 40px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);" class="btn-confirm">确认</button>
                         </div>
@@ -436,7 +478,8 @@
           {
             title: '采血完成',
             description: '您的血液样本已成功采集，请按照下方提示取走报告单',
-            content: `<img src="./assets/实际图片5.jpg" alt="采血完成" class="card-image" />
+            content: `<div class="step-content">
+                      <img src="./assets/实际图片5.jpg" alt="采血完成" class="card-image" />
                       <div class="result-card">
                         <div class="result-header">采集结果</div>
                         <div class="result-row">
@@ -457,7 +500,8 @@
                           <span class="result-label">采集状态:</span>
                           <span class="result-value success-value">成功</span>
                         </div>
-                      </div>`,
+                      </div>
+                    </div>`,
             buttonText: '完成并退出'
           }
         ];
@@ -485,11 +529,13 @@
           const buttonText = steps[currentStep].buttonText;
           const showButton = steps[currentStep].showButton !== false;
           
-          // 创建新的内容，保留标题和描述
+          // 创建新的内容，使用新的布局结构
           stepContainer.innerHTML = `
             <h2 class="step-title">${steps[currentStep].title}</h2>
             <p class="step-description">${steps[currentStep].description}</p>
-            ${mainContent}
+            <div class="step-content">
+              ${mainContent}
+            </div>
             ${showButton ? `<button class="button">${buttonText}</button>` : ''}
           `;
           
